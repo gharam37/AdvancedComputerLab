@@ -1,0 +1,13 @@
+
+public class State {
+
+	String OneState;
+	String ZeroState;
+	String PrevState;
+	String Name;
+	
+	public State(String Name,String Zero,String One) {
+		
+		
+	}
+}

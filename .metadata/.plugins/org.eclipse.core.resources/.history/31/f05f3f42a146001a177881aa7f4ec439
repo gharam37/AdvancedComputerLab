@@ -1,0 +1,12 @@
+
+public class State {
+
+	State OnOne;
+	State OnZero;
+	State PrevState;
+	String Name;
+	
+	public State() {
+		
+	}
+}

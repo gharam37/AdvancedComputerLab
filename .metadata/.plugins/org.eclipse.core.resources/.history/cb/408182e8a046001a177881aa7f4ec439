@@ -1,0 +1,10 @@
+
+public class State {
+
+	State OnOne;
+	State OnZero;
+	
+	public State() {
+		
+	}
+}
