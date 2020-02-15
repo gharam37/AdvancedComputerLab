@@ -490,6 +490,6 @@ public class DFA {
 
         
 
-		//System.out.println(dfa);
+		System.out.println(dfa.run("1,0,0"));
 	}
 }
