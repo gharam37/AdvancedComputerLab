@@ -1,0 +1,45 @@
+import java.util.ArrayList;
+
+public class State {
+
+	String OneState;
+	String ZeroState;
+	String PrevState;
+	String EpsilonState;
+	String Name;
+	boolean constructured=false;
+	ArrayList<String> ZeroStates;
+	ArrayList<State> OneStates;
+	ArrayList<State> EpsilonStates;
+
+
+	
+	
+	public State(String Name,String Zero,String One) {
+		this.Name=Name;
+		this.ZeroState=Zero;
+		this.OneState=One;
+		
+	}
+	public State(String Name) {
+		this.Name=Name;
+
+		this.EpsilonStates= new ArrayList<State>();
+		this.OneStates= new ArrayList<State>();
+		this.ZeroStates= new ArrayList<String>();
+
+
+		
+	}
+	public State(String Name,String Zero,String One,String epsilon) {
+		this.Name=Name;
+		this.ZeroState=Zero;
+		this.OneState=One;
+		this.EpsilonState=epsilon;
+		
+	}
+	
+	public String toString() {
+		return this.Name+","+this.ZeroStates+","+this.OneStates+","+this.EpsilonStates;
+	}
+}
