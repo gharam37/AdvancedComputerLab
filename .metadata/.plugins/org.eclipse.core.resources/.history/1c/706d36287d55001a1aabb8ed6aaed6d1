@@ -1,0 +1,8 @@
+
+public class FDFA extends Machine{
+
+	
+	public Machine(String Representation) {
+		
+	}
+}

@@ -1,0 +1,82 @@
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class FDFA extends Machine{
+
+	public FDFA(String Representation) {
+		super(Representation);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	void Start(String Representation) {
+		this.Representation=Representation;
+		String[] parts = Representation.split("#");
+		String[] States=parts[0].split(";");
+		String [] SuccessArray=parts[1].split(",");
+		
+		for (int i=0;i<SuccessArray.length;i++) {
+			SuccessStates.add(SuccessArray[i]);
+		}
+		for(int i=0;i<States.length;i++)
+		{
+			String[] StateArray=States[i].split(",");
+			
+			FDFAState s=new FDFAState(StateArray[0],StateArray[1],StateArray[2],StateArray[3]);
+			MyStates.add(s);
+			System.out.println(s);
+			
+		}
+		
+	}
+	
+	public void run(String input) {
+		Stack<String> stack= new Stack<String>();
+		String[] Tape=input.split(",");
+		int R=0;
+		int L=0;
+		String output=""l
+		FDFAState s= (FDFAState)(MyStates.get(0));
+		//System.out.println(s.Name);
+		stack.push(s.Name);
+		while(L<Tape.length) {
+			String current = stack.peek();
+			for(int j=0;j<MyStates.size() && L<Tape.length;j++) {
+				s= (FDFAState)(MyStates.get(j));
+				if(s.Name.equals(current)) {
+					if(Tape[L].equals("0"))
+					{
+						current=s.ZeroState;
+					}
+					else
+					{
+						current=s.OneState;
+
+					}
+					stack.push(current);
+					L+=1;
+
+
+				}
+			}
+			
+		}
+		while(!SuccessStates.contains(stack.peek()))
+		{
+			stack.pop();
+			L--;
+		}
+		
+		//System.out.println(SuccessStates);
+		System.out.println(L);
+		System.out.println(stack);
+	}
+	
+	public static void main(String[] args) {
+		FDFA f1=new FDFA("0,0,1,00;1,2,1,01;2,0,3,10;3,3,3,11#0,1,2");
+		f1.run("1,1,0");
+	}
+
+	
+	
+}

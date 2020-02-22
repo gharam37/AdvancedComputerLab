@@ -6,7 +6,7 @@ public class State {
 	String ZeroState;
 	String PrevState;
 	String EpsilonState;
-	String Name;
+     String Name;
 	boolean constructured=false;
 	ArrayList<String> ZeroStates;
 	ArrayList<String> OneStates;
@@ -39,7 +39,10 @@ public class State {
 		
 	}
 	
-	public String toString() {
+	public State() {
+		
+	}
+	/*public String toString() {
 		if(this.constructured) {
 			return this.Name+","+this.ZeroState+","+this.OneState;
 
@@ -47,5 +50,5 @@ public class State {
 		else {
 		return this.Name+","+this.ZeroStates+","+this.OneStates+","+this.EpsilonStates;
 		}
-	}
+	}*/
 }
