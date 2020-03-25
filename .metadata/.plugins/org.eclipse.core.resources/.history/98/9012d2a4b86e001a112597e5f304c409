@@ -1,0 +1,18 @@
+
+public class CFG {
+
+	public static String LRE(String input) {
+		String output="";
+		return output;
+	}
+	
+	public static void main(String[]args) {
+		String input ="S,ScT,T;T,aSb,iaLb,i;L,SdL,S\r\n" + 
+				"";
+        String output = LRE(input);
+        System.out.print(output);
+		
+		System.out.println("Hello World");
+		
+	}
+}

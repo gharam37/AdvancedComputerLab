@@ -1,9 +1,0 @@
-
-public class FDFAState extends State{
-
-	public FDFAState(String Name) {
-		super(Name);
-		// TODO Auto-generated constructor stub
-	}
-
-}
