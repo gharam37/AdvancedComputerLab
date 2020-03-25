@@ -15,7 +15,8 @@ public class CFG {
 	    	Grammer.add(rules[i].split(",",-1));
 	    	//System.out.println(rules[i].split(",").length);
 	    }
-	    for(int i=0;i<Grammer.size();i++) {
+	    int OriginalGrammerLength=Grammer.size();
+	    for(int i=0;i<OriginalGrammerLength;i++) {
 	    	String []Substitution =null;
 	    	//System.out.println(toRuleString(Grammer.get(i)));
 	    	if(i!=0) {
@@ -30,7 +31,7 @@ public class CFG {
 	    	if(NewRules.size()==2) {
 	    		Grammer.remove(i);
 	    		Grammer.add(i,NewRules.get(0));
-	    		Grammer.add(i+1,NewRules.get(1));
+	    		Grammer.add(NewRules.get(1));
 
 	    		
 	    	}
@@ -39,6 +40,7 @@ public class CFG {
 	    		Grammer.add(i,NewRules.get(0));
 	    		
 	    	}
+	    	
 	    	
 	    }
 	    for(int i=0;i<Grammer.size();i++) {
@@ -49,7 +51,7 @@ public class CFG {
 	    		output+=toRuleString(Grammer.get(i))+";";
 
 	    	}
-	    	System.out.println(toRuleString(Grammer.get(i)));
+	    	//System.out.println(toRuleString(Grammer.get(i)));
 	    }
 	    //System.out.println(Grammer.get(0)[1]);
 
@@ -71,6 +73,7 @@ public class CFG {
 			}
 			else {
 				Betas.add(rule[i]);
+				//System.out.println(rule[i]);
 			}
 			
 		}
@@ -136,19 +139,24 @@ public class CFG {
 		
 	}
 	public static String[] Substitute(String [] rule , ArrayList<String[]> grammer ,int index) {
-		String[] newRule=null;
+		String[] newRule=rule.clone();
 	    ArrayList<String> ListRule=new ArrayList<String>();
 	    ListRule.add(rule[0]);
 	    //System.out.println(ListRule.get(0));
 	    //Loop Over All roles
+	    String RuleName=GetRuleName(rule[0]);
+	    boolean WillSub=false;
 	    	for(int j=1;j<rule.length;j++) {
 	    		if(rule[j].length()>0) {
 	    		if(Character.isUpperCase(rule[j].charAt(0))){
 	    			String SubRule=GetRuleName(rule[j]);
-	    			//System.out.println("The rule is"+SubRule);
+	    			
+	    			//System.out.println("The rule is"+rule[j]);
 	    			for(int i=0;i<index;i++) {
-	    			if(grammer.get(i)[0].equals(SubRule)) {
+	    			if(grammer.get(i)[0].equals(SubRule) && !RuleName.equals(SubRule)) {
+	    				WillSub=true;
 
+	    				//System.out.println("Here");
 	    				    //System.out.println("Got"+SubRule+toRuleString(grammer.get(i)));
 	    			        String[] SubRuleArray=grammer.get(i);
 	    			        for(int k=1;k<SubRuleArray.length;k++) {
@@ -167,11 +175,17 @@ public class CFG {
 	    			        }
 	    			        
 	    					//System.out.println(SubRule);
+	    	    	rule=GetStringArray(ListRule);
+	    	    	//System.out.println(toRuleString(rule));
+	    	    	j=0;
+	    	    	
+
 	    					
 	    			}
+
 	    			}
-	    	    	rule=GetStringArray(ListRule);
-	    	    	j=1;
+	    	    	
+	    	    	
 	    	    	//System.out.println(toRuleString(rule));
 	    		    
 
@@ -179,13 +193,21 @@ public class CFG {
 	    		}
 	    		ListRule=new ArrayList<String>();
 	    		ListRule.add(rule[0]);
+	    	
 	    		
 	    		
 	    	
 	    }
 	    	}
 
+	    	if(WillSub) {
+	    		
+	    	
 		return rule;
+	    	}
+	    	else {
+	    		return newRule;
+	    	}
 		
 	}
 	public static String toRuleString(String[] RuleArray) {
@@ -203,13 +225,69 @@ public class CFG {
 	}
 	
 	public static void main(String[]args) {
-		String input ="S,ScT,T;T,aSb,iaLb,i;L,SdL,S" ;
-				
-				
-        String output = LRE(input);
-       // System.out.print(output);
+		String input ="S,SuS,SS,Ss,lSr,a";
 		
-		System.out.println("Hello World");
+		
+        String output = LRE(input);
+      System.out.println(output);
+	      System.out.println("\n");
+
+		 input ="S,Sa,b" + 
+		 		"" ;
+		 output = LRE(input);
+		 
+	      System.out.println(output);
+	      System.out.println("\n");
+
+		
+	  input ="S,ScT,T;T,aSb,iaLb,i;L,SdL,S";
+	  output = LRE(input);
+      System.out.println(output);
+      System.out.println("\n");
+
+	     input ="S,Sab,cd" ;
+	     output = LRE(input);
+	      System.out.println(output);
+	      System.out.println("\n");
+	      
+	      ///////////
+	      
+	      
+	      
+
+			 input ="S,SuT,T;T,TF,F;F,Fs,P;P,a,b";
+			 		
+			 output = LRE(input);
+			 
+		      System.out.println(output);
+		      System.out.println("\n");
+
+			
+		  input ="S,z,To;T,o,Sz";
+		  output = LRE(input);
+	      System.out.println(output);
+	      System.out.println("\n");
+
+		     input ="S,lLr,a;L,LbS,S" ;
+		     output = LRE(input);
+		      System.out.println(output);
+		      System.out.println("\n");
+		      
+		      input ="S,BC,C;B,Bb,b;C,SC,a";
+			     output = LRE(input);
+			      System.out.println(output);
+			      System.out.println("\n");
+							
+						
+
+		
+
+				 
+				 
+				
+				
+        
+		//System.out.println("Hello World");
 		
 	}
 }
