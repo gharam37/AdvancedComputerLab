@@ -11,6 +11,9 @@ public class CFG {
 	String Representation;
 	ArrayList<String[]> Grammer;
 	ArrayList<String> First;
+	ArrayList<String> Follow;
+	
+
 	
 	
 
@@ -238,7 +241,7 @@ public class CFG {
 			//System.out.println(FirstString[1]);
 			s+=First.get(i)+";";
 			
-			System.out.println(First.get(i));
+			//System.out.println(First.get(i));
 		}
 		s+=First.get(First.size()-1);
 
@@ -364,8 +367,124 @@ public class CFG {
 	}
 	public String Follow() {
 		String s= "";
+		for (int i=0;i<Grammer.size();i++) {
+			//System.out.println("Current Rule"+GetRuleName(Grammer.get(i)[0]));
+			
+				String follow=HelperFollow(Grammer.get(i)[0]," ");
+
+				//System.out.println("Adding First to list"+GetRuleName(Grammer.get(i)[0])+","+first);
+				Follow.add(GetRuleName(Grammer.get(i)[0])+","+follow);
+
+			
+		}
+		for(int i=0;i<Follow.size()-1;i++) {
+			String [] FollowString=Follow.get(i).split(",");
+			//System.out.println("Follow of "+FollowString[0]+" "+FollowString[1]);
+			s+=Follow.get(i)+";";
+			
+			//System.out.println(First.get(i));
+		}
+		s+=Follow.get(Follow.size()-1);
+		
+
 		return s;
 		
+	}
+	String GetFollow(String RuleName) {
+		for (int i=0;i<this.Follow.size();i++) {
+			String rule=this.Follow.get(i);
+			//Added First to List
+			//System.out.println("In get first"+rule);
+			if(!rule.isEmpty() &&(rule.charAt(0)+"").equals(RuleName)){
+				return rule;
+			}
+			
+		}
+		return null;
+	}
+	public String HelperFollow(String RuleName,String Previous) {
+		String follow="";
+		//System.out.println(RuleName);
+
+		//Array<String> ComputedRules=
+		if(GetFollow(RuleName)!=null) {
+			return GetFollow(RuleName).split(",")[1];
+		}
+				for(int i=0;i<Grammer.size();i++) {
+					String[] Rule=Grammer.get(i);
+					for(int j=1;j<Rule.length;j++) {
+					if(! Previous.equals(Rule[0]) ) {
+						//System.out.println("Here for in HELPER FOLLOW"+RuleName);
+
+					String output=ComputeFollow(Rule[0],RuleName,Rule[j]);
+					follow+=output;
+
+					}
+					else {
+
+						//System.out.println("Couldn't Get in Cuz "+Previous);
+					}
+				}
+					
+
+				}
+				//Previous= " ";
+
+
+				
+
+	if(RuleName.equals("S")) {
+					follow+="$";
+				}	
+	return uniqueCharacters(follow);
+		
+	}
+	
+	public String ComputeFollow(String HeadName,String RuleName,String Rule) {
+		String output="";
+		this.First();
+		if(Rule.length()>1) {
+			if(!(Rule.charAt(0)+"").equals(RuleName)) {
+				//System.out.println(HeadName+"Rule name"+RuleName+" "+Rule.substring(1));
+				//System.out.println(Rule.substring(1).length());
+				return ComputeFollow(HeadName,RuleName,(Rule.substring(1)));
+			}
+			else if(Character.isLowerCase(Rule.charAt(1))) {
+				
+				return Rule.charAt(1)+ComputeFollow(HeadName,RuleName,(Rule.substring(2)));
+			}
+			else if (Character.isUpperCase(Rule.charAt(1))){
+				String[] FirstString=GetFirst(Rule.charAt(1)+"").split(",");
+				if(FirstString[1].contains("e")) {
+					String EpsilonRemoved=FirstString[1].replace("e","");
+					Rule=Rule.replace(Rule.charAt(1)+"", "");
+					if(Rule.length()==1) {
+						//System.out.println("Removed Epsilon from"+HeadName+RuleName);
+
+						return EpsilonRemoved+HelperFollow(HeadName,RuleName);
+					}
+					else {
+					return EpsilonRemoved+ComputeFollow(HeadName,RuleName,Rule);
+					}
+				}
+				else {
+					return FirstString[1]+ComputeFollow(HeadName,RuleName,Rule.substring(2));
+				}
+			}
+		}
+		else if((Rule.length()==1 ) && (Rule.charAt(0)+"").equals(RuleName)) {
+			//System.out.println("Here for "+RuleName+" Head "+HeadName);
+			//System.out.println( HelperFollow(HeadName,RuleName));
+
+			return HelperFollow(HeadName,RuleName);
+			
+		}
+		else {
+			//System.out.println("Neither");
+		}
+		
+		
+		return output;
 	}
 	public static String toRuleString(String[] RuleArray) {
 		String RuleString="";
@@ -386,6 +505,8 @@ public class CFG {
 		
 		 this.Grammer=new ArrayList<String[]>();
 		 this.First=new ArrayList<String>();
+		 this.Follow=new ArrayList<String>();
+
 
 			String output="";
 			//Prepare Grammer
@@ -396,79 +517,18 @@ public class CFG {
 		    }
 	}
 	public static void main(String[]args) {
-		String input ="S,aA;A,SB,e;B,bA,cA";
-				 
+		String input ="S,ScT,T;T,aSb,iaLb,e;L,SdL,S";
 		 //input ="S,La,b;L,S,Z,e;Z,k";
 
 		CFG cfg=new CFG(input);
 		
 		String firstEncoding = cfg.First();
+
 		String followEncoding = cfg.Follow();
 		System.out.println("First: " + firstEncoding);
+
 		System.out.println("Follow: " + followEncoding);
-		//System.out.println(sortString("zab"));
 		
-		
-      /*  String output = LRE(input);
-      System.out.println(output);
-	      System.out.println("\n");
-
-		 input ="S,Sa,b" + 
-		 		"" ;
-		 output = LRE(input);
-		 
-	      System.out.println(output);
-	      System.out.println("\n");
-
-		
-	  input ="S,ScT,T;T,aSb,iaLb,i;L,SdL,S";
-	  output = LRE(input);
-      System.out.println(output);
-      System.out.println("\n");
-
-	     input ="S,Sab,cd" ;
-	     output = LRE(input);
-	      System.out.println(output);
-	      System.out.println("\n");
-	      
-	      ///////////
-	      
-	      
-	      
-
-			 input ="S,SuT,T;T,TF,F;F,Fs,P;P,a,b";
-			 		
-			 output = LRE(input);
-			 
-		      System.out.println(output);
-		      System.out.println("\n");
-
-			
-		  input ="S,z,To;T,o,Sz";
-		  output = LRE(input);
-	      System.out.println(output);
-	      System.out.println("\n");
-
-		     input ="S,lLr,a;L,LbS,S" ;
-		     output = LRE(input);
-		      System.out.println(output);
-		      System.out.println("\n");
-		      
-		      input ="S,BC,C;B,Bb,b;C,SC,a";
-			     output = LRE(input);
-			      System.out.println(output);
-			      System.out.println("\n");*/
-							
-						
-
-		
-
-				 
-				 
-				
-				
-        
-		//System.out.println("Hello World");
 		
 	}
 }
