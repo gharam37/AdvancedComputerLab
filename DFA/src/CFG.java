@@ -1,10 +1,18 @@
 import java.util.ArrayList;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Arrays;
 
 public class CFG {
+
+	String Representation;
+	ArrayList<String[]> Grammer;
+	ArrayList<String> First;
+	
+	
 
 	public static String LRE(String input) {
 	    ArrayList<String[]> Grammer=new ArrayList<String[]>();
@@ -210,6 +218,155 @@ public class CFG {
 	    	}
 		
 	}
+	
+	public String First() {
+		String s= "";
+		for (int i=0;i<Grammer.size();i++) {
+			//System.out.println("Current Rule"+GetRuleName(Grammer.get(i)[0]));
+			if(GetFirst(GetRuleName(Grammer.get(i)[0]))==null) {
+				//System.out.println("Here"+GetRuleName(Grammer.get(i)[0]));
+
+				String first=HelperFirst(Grammer.get(i),null);
+
+				//System.out.println("Adding First to list"+GetRuleName(Grammer.get(i)[0])+","+first);
+				First.add(GetRuleName(Grammer.get(i)[0])+","+first);
+
+			}
+		}
+		for(int i=0;i<First.size()-1;i++) {
+			String [] FirstString=First.get(i).split(",");
+			//System.out.println(FirstString[1]);
+			s+=First.get(i)+";";
+			
+			System.out.println(First.get(i));
+		}
+		s+=First.get(First.size()-1);
+
+		return s;
+		
+	}
+	public String HelperFirst(String [] Rule, String Previous) {
+		String first="";
+		//System.out.println("Rule to work wiz"+Rule);
+		String RuleString =toRuleString(Rule);
+		String RuleName=GetRuleName(RuleString);
+		//System.out.println(RuleName);
+
+		//Array<String> ComputedRules=
+		for(int i=1;i<Rule.length;i++) {
+			
+			/*if(Character.isLowerCase(Rule[i].charAt(0))) {
+				first+=Rule[i].charAt(0)+"";
+			    System.out.println("No Recursion"+Rule[i]);
+
+			}*/
+			//Skip if cycle
+			if(Previous ==null || !Previous.equals(Rule[i].charAt(0)+"")){
+			String Output= ComputeFirst(RuleName,Rule[i]);
+			first+=Output;
+			}
+			
+			
+			
+		}
+		
+
+		
+		return uniqueCharacters(first);
+	}
+	   public static String sortString(String inputString) 
+	    { 
+	        // convert input string to char array 
+	        char tempArray[] = inputString.toCharArray(); 
+	          
+	        // sort tempArray 
+	        Arrays.sort(tempArray); 
+	          
+	        // return new sorted string 
+	        return new String(tempArray); 
+	    } 
+	public String GetFirst(String RuleName) {
+		for (int i=0;i<this.First.size();i++) {
+			String rule=this.First.get(i);
+			//Added First to List
+			//System.out.println("In get first"+rule);
+			if(!rule.isEmpty() &&(rule.charAt(0)+"").equals(RuleName)){
+				return rule;
+			}
+			
+		}
+		return null;
+	}
+	
+	public boolean GoesToEpsilon(String[] rule) {
+		for(int i=0;i<rule.length;i++) {
+			if(rule[i].equals("e")) {
+				return true;
+			}
+		}
+		return false;
+		
+	}
+	//Takes a String one RHS of a rule
+	public static String uniqueCharacters(String test){
+		//String string = "aabbccdefatafaz";
+
+		char[] chars = test.toCharArray();
+		Set<Character> charSet = new LinkedHashSet<Character>();
+		for (char c : chars) {
+		    charSet.add(c);
+		}
+
+		StringBuilder sb = new StringBuilder();
+		for (Character character : charSet) {
+		    sb.append(character);
+		}
+		return sb.toString();
+
+	}
+	public String ComputeFirst(String RuleName,String Rules) {
+		
+		String FirstofRHS = "";
+		if( Rules.length()>0 ) {
+			if( Character.isLowerCase(Rules.charAt(0))) {
+			return Rules.charAt(0)+"";
+			}
+			else {
+				//System.out.println(FindRule(Rules.charAt(0)+""));
+				String First=HelperFirst(FindRule(Rules.charAt(0)+""),RuleName);
+				if(First.contains("e") && Rules.length()>1) {
+					First = First.replace("e", "");
+					return First+ComputeFirst(Rules.charAt(0)+"",Rules.substring(1));
+					
+				}
+				else {
+					return First;
+				}
+				
+			}
+		}
+		return "";
+
+
+
+
+		
+		
+	}
+	public String[] FindRule(String RuleName) {
+		for(int i=0;i<Grammer.size();i++) {
+			//System.out.println(RuleName);
+			if(Grammer.get(i)[0].equals(RuleName)) {
+				return Grammer.get(i);
+			}
+		}
+		return null;
+	}
+	public String Follow() {
+		String s= "";
+		return s;
+		
+	}
 	public static String toRuleString(String[] RuleArray) {
 		String RuleString="";
 		for(int i=0;i<RuleArray.length;i++) {
@@ -224,11 +381,35 @@ public class CFG {
 		return RuleString;
 	}
 	
+	public CFG(String s) {
+		this.Representation=s;
+		
+		 this.Grammer=new ArrayList<String[]>();
+		 this.First=new ArrayList<String>();
+
+			String output="";
+			//Prepare Grammer
+		    String[] rules=s.split(";");
+		    for(int i=0;i<rules.length;i++) {
+		    	Grammer.add(rules[i].split(",",-1));
+		    	//System.out.println(rules[i].split(",").length);
+		    }
+	}
 	public static void main(String[]args) {
-		String input ="S,SuS,SS,Ss,lSr,a";
+		String input ="S,aA;A,SB,e;B,bA,cA";
+				 
+		 //input ="S,La,b;L,S,Z,e;Z,k";
+
+		CFG cfg=new CFG(input);
+		
+		String firstEncoding = cfg.First();
+		String followEncoding = cfg.Follow();
+		System.out.println("First: " + firstEncoding);
+		System.out.println("Follow: " + followEncoding);
+		//System.out.println(sortString("zab"));
 		
 		
-        String output = LRE(input);
+      /*  String output = LRE(input);
       System.out.println(output);
 	      System.out.println("\n");
 
@@ -276,7 +457,7 @@ public class CFG {
 		      input ="S,BC,C;B,Bb,b;C,SC,a";
 			     output = LRE(input);
 			      System.out.println(output);
-			      System.out.println("\n");
+			      System.out.println("\n");*/
 							
 						
 
