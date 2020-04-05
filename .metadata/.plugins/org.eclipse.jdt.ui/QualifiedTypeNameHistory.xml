@@ -5,4 +5,7 @@
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.Stack"/>
 <fullyQualifiedTypeName name="FDFA.State"/>
+<fullyQualifiedTypeName name="java.lang.Character"/>
+<fullyQualifiedTypeName name="java.util.Set"/>
+<fullyQualifiedTypeName name="java.util.LinkedHashSet"/>
 </qualifiedTypeNameHistroy>

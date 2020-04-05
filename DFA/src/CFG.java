@@ -231,6 +231,7 @@ public class CFG {
 
 				String first=HelperFirst(Grammer.get(i),null);
 
+				first=sortString(first);
 				//System.out.println("Adding First to list"+GetRuleName(Grammer.get(i)[0])+","+first);
 				First.add(GetRuleName(Grammer.get(i)[0])+","+first);
 
@@ -371,6 +372,13 @@ public class CFG {
 			//System.out.println("Current Rule"+GetRuleName(Grammer.get(i)[0]));
 			
 				String follow=HelperFollow(Grammer.get(i)[0]," ");
+				
+				follow=sortString(follow);
+				if(follow.contains("$")) {
+					follow=follow.replace("$", "");
+					follow=follow+"$";
+				}
+
 
 				//System.out.println("Adding First to list"+GetRuleName(Grammer.get(i)[0])+","+first);
 				Follow.add(GetRuleName(Grammer.get(i)[0])+","+follow);
