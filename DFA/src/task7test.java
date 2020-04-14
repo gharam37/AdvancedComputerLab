@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 * @since 2020-04-09
 */
 
-class task6Test {
+class task7Test {
 
 	// https://www.facebook.com/groups/1640157849618962/permalink/2264383597196381/
 	private final String cfg1 = "S,iST,e;T,cS,a";
@@ -105,9 +105,6 @@ class task6Test {
 	@Test
 	public void TestTable1() {
 		Table cfg = new Table(cfg1);
-		System.out.println( CreateTable(cfg1, cfg.table()) +"test");
-		System.out.println(CreateTable(cfg1, table1));
-
 
 		assertEquals(CreateTable(cfg1, table1), CreateTable(cfg1, cfg.table()));
 	}
@@ -232,4 +229,3 @@ class task6Test {
 	}
 
 }
-

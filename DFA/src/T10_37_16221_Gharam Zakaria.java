@@ -525,7 +525,7 @@ public class CFG {
 		    }
 	}
 	public static void main(String[]args) {
-		String input ="S,iST,e;T,cS,a";
+		String input ="S,ScT,T;T,aSb,iaLb,e;L,SdL,S";
 		 //input ="S,La,b;L,S,Z,e;Z,k";
 
 		CFG cfg=new CFG(input);
