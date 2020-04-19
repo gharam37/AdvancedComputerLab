@@ -17,7 +17,7 @@ public class Table {
 		this.grammer.Follow();
 		//this.First=grammer.First;
 		//this.Follow=grammer.Follow;
-		//System.out.println(this.Follow);
+		////system.out.println(this.Follow);
 		
 		Construct();
 		
@@ -71,9 +71,9 @@ public class Table {
 		
 		for(int i=0;i<Grammer.size();i++) {
 			Rules.add(Grammer.get(i)[0]);
-			//System.out.println(Rules.get(i));
+			////system.out.println(Rules.get(i));
 			for(int j=1;j<Grammer.get(i).length;j++) {
-				//System.out.println(Grammer.get(i)[j]);
+				////system.out.println(Grammer.get(i)[j]);
 				terminalString+= Grammer.get(i)[j].replaceAll("[A-Z]", "");
 				terminalString= terminalString.replace("e", "");
 				  
@@ -87,13 +87,13 @@ public class Table {
         terminals = Arrays.asList(terminalsArray); 
 
         
-		  //System.out.println(Rules.get(1));
+		  ////system.out.println(Rules.get(1));
         
         for(int i=0;i<Rules.size();i++) {
         	for(int j=0;j<terminals.size();j++) {
         		ArrayList<String> Derivations= new ArrayList<String>();
                 Derivations.add(Rules.get(i)+","+terminals.get(j));
-        		//System.out.println("Constructing for rule "+Rules.get(i)+" and terminal "+terminals.get(j));
+        		////system.out.println("Constructing for rule "+Rules.get(i)+" and terminal "+terminals.get(j));
         	    Derivations.addAll(Derivations((String)Rules.get(i),(String)terminals.get(j)));
         	    if(Derivations.size()>1) {
         	    Representation.add(Derivations);
@@ -102,8 +102,8 @@ public class Table {
         	}
         }
 
-        //System.out.println(Representation);
-		//System.out.println(this.Representation);
+        ////system.out.println(Representation);
+		////system.out.println(this.Representation);
 		
 	}
 	
@@ -129,10 +129,10 @@ public class Table {
 		ArrayList<String> ruleDerivations=new ArrayList<String>();
 		String [] ruleArray =this.grammer.FindRule(rule);
 		for(int i=1;i<ruleArray.length;i++) {
-			//System.out.println(ruleArray[i]);
+			////system.out.println(ruleArray[i]);
 			boolean Derivable=IsDerivable(rule,terminal,ruleArray[i]);
 			if( Derivable) {
-        		System.out.println("rule "+rule+" can derive terminal "+terminal+ " using "+ruleArray[i]);
+        		////system.out.println("rule "+rule+" can derive terminal "+terminal+ " using "+ruleArray[i]);
         		
         		ruleDerivations.add(ruleArray[i]);
 
@@ -166,7 +166,7 @@ public class Table {
 			}
 			else {
 				String firstOfRule=this.grammer.GetFirst(rhs.charAt(i)+"");
-				//System.out.println(firstOfRule);
+				////system.out.println(firstOfRule);
 				if(firstOfRule.contains(terminal)) {
 					return true;
 				}
@@ -193,121 +193,126 @@ public class Table {
 	}
 	public String Parse(String input) {
 
-		input+="$";
 		String OriginalInput=input;
 
-		String output="S,";
+		input+="$";
 
-		String Matched="";
+
+		ArrayList<String> outputList=new ArrayList<String>();
+		outputList.add("S");
         Stack<String> stack = new Stack<String>(); 
         stack.push("$");
         stack.push("S");
-        while(!stack.isEmpty() ){
-        	//System.out.println(stack);
-        	String Top=stack.pop();
-        	
+       // //system.out.println(stack);
 
-        	if(Top.equals(input.charAt(0)+"")) {
-        		Matched+=Top;
-        		
-        		input=input.substring(1);
-        		//System.out.println("Input "+input);
-        		//System.out.println("Matched "+Matched);
-        		String StackContent=stack.toString();
-        		StackContent =StackContent.replace(",", "");
-        		StackContent =StackContent.replace(" ", "");
-        		StackContent =StackContent.replace("$", "");
-        		StackContent =StackContent.replace("[", "");
-        		StackContent =StackContent.replace("]", "");
-        		StackContent = new StringBuffer(StackContent).reverse().toString();
+        
+        String Top=stack.pop();
+        int i = 0;
+        int count=0;
+        boolean popped=false;
+        while(!stack.isEmpty()   ) {
 
 
+        	char CurrentChar=input.charAt(i);
+        	if(Character.isLowerCase(Top.charAt(0))) {
+        		if((CurrentChar+"").equals(Top)) {
+        			//Matched+=Top;
+        		    Top=stack.pop();
+        		    popped=true;
+        		i++;
 
-        		output+=Matched+StackContent+",";
-        		
-
-        	}
-        	else {
-        		if(Character.isUpperCase(Top.charAt(0))) {
-        	String [] Substitution=Substitution(Top+","+input.charAt(0));
-        	if(Substitution!=null) {
-        		for(int j=Substitution.length-1;j>=0;j--) {
-        			//System.out.println(input);
-        			//System.out.println(Substitution[j]);
-        			if(Substitution[j].equals("e")) {
-        				//System.out.println("Hello");
-                		String StackContent=stack.toString();
-                		StackContent =StackContent.replace(",", "");
-                		StackContent =StackContent.replace(" ", "");
-                		StackContent =StackContent.replace("$", "");
-                		StackContent =StackContent.replace("[", "");
-                		StackContent =StackContent.replace("]", "");
-                		StackContent = new StringBuffer(StackContent).reverse().toString();
-                		String CurrentOuput= Matched+StackContent;
-                		output+=Matched+StackContent+",";
-
-        			System.out.println(CurrentOuput);
-        			
-
-
-
-
-            		
-            		//System.out.println(Matched+StackContent);
-        			}
-        			else {
-            			stack.push(Substitution[j]);
-
-        			}
-        		}
-        		
-        	}
-        	else if(!HasEpsilon(Top)) {
-        		String StackContent=stack.toString();
-        		StackContent =StackContent.replace(",", "");
-        		StackContent =StackContent.replace(" ", "");
-        		StackContent =StackContent.replace("$", "");
-        		StackContent =StackContent.replace("[", "");
-        		StackContent =StackContent.replace("]", "");
-        		StackContent = new StringBuffer(StackContent).reverse().toString();
-        		String Stuff= Matched+StackContent;
-        		
-        		if(!Stuff.equals(OriginalInput)) {
-        			//System.out.println("Error");
-        			break;
-        			
         		}
         		else {
-        			//System.out.println(Stuff);
+            		////system.out.println("Here");
+            		////system.out.println(CurrentChar);
+            		////system.out.println(Top);
+
+        			outputList.add("ERROR");
+        			////system.out.println(outputList);
+        			return ConstructDerivation(outputList);
+        			
+        		}
+        		//break;
+        		
+        	}
+        	else {
+            	String [] Substitution=Substitution(Top+","+input.charAt(i));
+            	if(Substitution!=null) {
+
+            		String Production="";
+
+            		if(!IsEpsilon(Substitution)) {
+            			for(int j=Substitution.length-1;j>=0;j--) {
+            				////system.out.println(Substitution[j]);
+                			
+                    	stack.push(Substitution[j]);
+
+                		}
+
+            			if(Character.isLowerCase(stack.peek().charAt(0))) {
+            			Top=stack.pop();
+                		i++;
+            			}
+
+
+            			
+
+            			
+                		//stack.pop();
+
+            			for(int k=0;k<Substitution.length;k++) {
+            				//Production+=Substitution[k];
+            				
+            			}
+            			
+
+            			
+            		}
+            		Production+=input.substring(0,i);
+
+        			String StackContent=stack.toString();
+            		StackContent =StackContent.replace(",", "");
+            		StackContent =StackContent.replace(" ", "");
+            		StackContent =StackContent.replace("$", "");
+            		StackContent =StackContent.replace("[", "");
+            		StackContent =StackContent.replace("]", "");
+            		StackContent = new StringBuffer(StackContent).reverse().toString();
+            		Production+=StackContent;
+
+            		outputList.add(Production);
+
+            	}
+            	else {
+            		outputList.add("ERROR");
+            		return ConstructDerivation(outputList);
+            	}
+
+
+        	}
+        	////system.out.println(outputList);
+        	////system.out.println("stack"+stack);
+        	////system.out.println("Productions "+outputList);
+        		if(!popped) {
+        	Top=stack.pop();
+        	        
         		}
         		
-        	       
-        	}
         	
-        
-           
+			popped=false;
+
+
 
         }
-        	}
-        }
-       
-        //System.out.println(Matched);
-        //System.out.println(input);
-        //System.out.println(stack);
-        if(!(stack.isEmpty() && input.isEmpty()))
-        {
-        	output+="ERROR";
-        	//System.out.println("Error");
-        }
-        output=output.replace(Matched+",", "");
-        if(output.charAt(output.length()-1)==',') {
-        	output=output.substring(0,output.length()-1);
-        }
         
-        System.out.println(output);
-        
+        if(!(outputList.get(outputList.size()-1).equals(OriginalInput))){
+        	outputList.add("ERROR");
+        	
+        }
+        	
+        ////system.out.println(outputList);
+        	
 
-		return output;
+		return ConstructDerivation(outputList);
 	}
 	public String[] Substitution(String Rule) {
 		for(int i=0;i<Representation.size();i++)
@@ -315,7 +320,7 @@ public class Table {
 			if(Representation.get(i).size()>1) {
 			for (int j=0;j<Representation.get(i).size();j++) {
 				if(Representation.get(i).get(j).equals(Rule)) {
-					//System.out.println(Representation.get(i).get(1)+Rule +"Rule");
+					////system.out.println(Representation.get(i).get(1)+Rule +"Rule");
 						return Representation.get(i).get(1).split("");
 
 					
@@ -351,18 +356,37 @@ public class Table {
 		return HasEpsilon;
 	}
 	
+	public String ConstructDerivation(ArrayList<String> outputList) {
+		String StackContent=outputList.toString();
+		StackContent =StackContent.replace(" ", "");
+		StackContent =StackContent.replace("[", "");
+		StackContent =StackContent.replace("]", "");
+		
+		return StackContent;
+	}
+	
+	public boolean IsEpsilon(String[] Substitution) {
+		boolean IsEpsilon=false;
+		for(int i=0;i<Substitution.length;i++) {
+			if(Substitution[i].equals("e")) {
+				return true;
+			}
+		}
+		
+		return IsEpsilon;
+	}
 	public String table() {
 		return this.toString();
 	}
 	public static void main(String[]args) {
 		
-		String input ="S,iST,e;T,cS,a";
+		String input ="S,lLr,a;L,lLrD,aD;D,cSD,e";
 		 //input ="S,La,b;L,S,Z,e;Z,k";
 
 		Table t=new Table(input);
 		System.out.println(t);
-		t.Parse("iia");
-		//System.out.println("Here");
+		System.out.println("Parse tree is "+t.Parse("laclacarr"));
+		////system.out.println("Here");
 	}
 
 }
